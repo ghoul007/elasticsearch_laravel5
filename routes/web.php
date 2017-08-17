@@ -12,5 +12,18 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+
+    $client = Elasticsearch\ClientBuilder::create()->build();
+
+    $result = $client->search([
+        "index" => "book",
+//        "body" => [
+//            "query" => [
+//                "match" => "ghoul"
+//            ]
+//        ]
+    ]);
+    var_dump($result['hits']['hits']);
+//    return view('welcome');
 });
