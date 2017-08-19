@@ -9,4 +9,9 @@ class Book extends Model
 
 
    protected $fillable = ['name', 'descripton'];
+
+
+
+
+
 }
