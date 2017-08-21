@@ -49,7 +49,7 @@ class BookController extends Controller
                            ] }';
 
 
-        $res = $this->searchQueryString($queryString);
+        $res = $this->searchQueryString($queryString,2,0);
         $res = $client->search($res);
 
         $books = $res['hits']['hits'];
@@ -91,7 +91,7 @@ class BookController extends Controller
     | get all
     |
     */
-    public function searchQueryString($query_string)
+    public function searchQueryString($query_string , $_limit = null ,$_offset = null )
     {
         $json = '{
             "query" : {'.$query_string.'
@@ -100,7 +100,9 @@ class BookController extends Controller
         $params = [
             'index' => 'ahmed',
             'type' => 'books',
-            'body' => $json
+            'body' => $json,
+            'from'=>$_offset,
+            'size'=>$_limit
         ];
 
         return $params;
