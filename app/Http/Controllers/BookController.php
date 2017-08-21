@@ -43,17 +43,38 @@ class BookController extends Controller
 
 //        $field = ["name" => $ff];
 //        $res = $this->searchBy(json_encode($field));
-        $queryString =  ' "query_string" : {
-                          "query" : "description:Qus~",
-                          "fields":["name","description"
-                           ] }';
+//        $queryString =  ' "query_string" : {
+//                          "query" : "description:Qus~",
+//                          "fields":["name","description"
+//                           ] }';
+//
+//
+//        $res = $this->searchQueryString($queryString,2,0);
 
 
-        $res = $this->searchQueryString($queryString,2,0);
+        $queryString = ' "bool":{
+                            "must":[{
+                                "query_string" : {
+                                        "query" : "description:Qus~",
+                                         "fields":["name","description" ]
+                                 }
+                            }],
+                            "should":[{
+                                "match_phrase":{
+                                "name":"Moshe Pacocha"
+                                }
+                            }]
+                       }
+                       
+                       ';
+
+
+        $res = $this->searchQueryString($queryString, 2, 0);
         $res = $client->search($res);
 
         $books = $res['hits']['hits'];
-        var_dump($books); die;
+        var_dump($books);
+        die;
         return view('book.index', compact('books'));
     }
 
@@ -91,18 +112,18 @@ class BookController extends Controller
     | get all
     |
     */
-    public function searchQueryString($query_string , $_limit = null ,$_offset = null )
+    public function searchQueryString($query_string, $_limit = null, $_offset = null)
     {
         $json = '{
-            "query" : {'.$query_string.'
+            "query" : {' . $query_string . '
             }
          }';
         $params = [
             'index' => 'ahmed',
             'type' => 'books',
             'body' => $json,
-            'from'=>$_offset,
-            'size'=>$_limit
+            'from' => $_offset,
+            'size' => $_limit
         ];
 
         return $params;
