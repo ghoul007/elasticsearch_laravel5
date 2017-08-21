@@ -55,7 +55,7 @@ class BookController extends Controller
         $queryString = ' "bool":{
                             "must":[{
                                 "query_string" : {
-                                        "query" : "description:Qus~",
+                                        "query" : "name:'.$ff.'~",
                                          "fields":["name","description" ]
                                  }
                             }],
@@ -69,12 +69,12 @@ class BookController extends Controller
                        ';
 
 
-        $res = $this->searchQueryString($queryString, 2, 0);
+        $res = $this->searchQueryString($queryString, 10, 0);
         $res = $client->search($res);
 
         $books = $res['hits']['hits'];
-        var_dump($books);
-        die;
+//        var_dump($books);
+//        die;
         return view('book.index', compact('books'));
     }
 
