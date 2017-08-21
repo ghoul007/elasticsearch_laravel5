@@ -41,10 +41,19 @@ class BookController extends Controller
             return view('book.index', compact('books'));
         }
 
-        $field = ["name" => $ff];
-        $res = $this->searchBy(json_encode($field));
+//        $field = ["name" => $ff];
+//        $res = $this->searchBy(json_encode($field));
+        $queryString =  ' "query_string" : {
+                          "query" : "description:Qus~",
+                          "fields":["name","description"
+                           ] }';
+
+
+        $res = $this->searchQueryString($queryString);
         $res = $client->search($res);
+
         $books = $res['hits']['hits'];
+        var_dump($books); die;
         return view('book.index', compact('books'));
     }
 
@@ -62,6 +71,30 @@ class BookController extends Controller
         $json = '{
             "query" : {
                 "match" : ' . $match . '
+            }
+         }';
+        $params = [
+            'index' => 'ahmed',
+            'type' => 'books',
+            'body' => $json
+        ];
+
+        return $params;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | search all
+    |--------------------------------------------------------------------------
+    |
+    | get all
+    |
+    */
+    public function searchQueryString($query_string)
+    {
+        $json = '{
+            "query" : {'.$query_string.'
             }
          }';
         $params = [
